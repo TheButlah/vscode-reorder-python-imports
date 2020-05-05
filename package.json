@@ -1,0 +1,53 @@
+{
+    "name": "reorder-python-imports",
+    "displayName": "reorder-python-imports",
+    "description": "Provides support for the reorder-python-imports tool for python",
+    "version": "0.0.1",
+    "author": {
+        "name": "Ryan Butler"
+    },
+    "engines": {
+        "vscode": "^1.44.0"
+    },
+    "categories": [
+        "Formatters",
+        "Programming Languages",
+        "Other"
+    ],
+    "activationEvents": [
+        "onLanguage:python",
+        "onCommand:reorder-python-imports.reorderImports"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "reorder-python-imports.reorderImports",
+                "title": "Reorder Imports",
+                "category": "Python Refactor"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "lint": "eslint src --ext ts",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^7.0.2",
+        "@types/node": "^13.11.0",
+        "@types/vscode": "^1.44.0",
+        "@typescript-eslint/eslint-plugin": "^2.26.0",
+        "@typescript-eslint/parser": "^2.26.0",
+        "eslint": "^6.8.0",
+        "glob": "^7.1.6",
+        "mocha": "^7.1.1",
+        "prettier": "2.0.5",
+        "typescript": "^3.8.3",
+        "vscode-test": "^1.3.0"
+    }
+}
