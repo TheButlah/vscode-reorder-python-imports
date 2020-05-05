@@ -26,7 +26,16 @@
                 "title": "Reorder Imports",
                 "category": "Python Refactor"
             }
-        ]
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "reorder-python-imports.reorderImports",
+                    "group": "Refactor",
+                    "when": "editorLangId == python"
+                }
+            ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
