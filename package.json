@@ -2,23 +2,25 @@
     "name": "reorder-python-imports",
     "displayName": "reorder-python-imports",
     "description": "Provides support for the reorder-python-imports tool for python",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "thebutlah",
     "author": {
         "name": "Ryan Butler",
         "email": "thebutlah@gmail.com"
     },
     "license": "MIT",
-    "engines": {
-        "vscode": "^1.44.0"
-    },
     "repository": {
-        "url": "https://github.com/TheButlah/https://github.com/TheButlah/vscode-reorder-python-imports"
+        "type": "git",
+        "url": "https://github.com/TheButlah/vscode-reorder-python-imports"
     },
+    "homepage": "https://github.com/TheButlah/vscode-reorder-python-imports",
     "categories": [
         "Formatters",
         "Other"
     ],
+    "engines": {
+        "vscode": "^1.44.0"
+    },
     "activationEvents": [
         "onLanguage:python",
         "onCommand:reorder-python-imports.reorderImports"
