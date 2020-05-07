@@ -1,4 +1,8 @@
+# Project specific files
 out
 node_modules
 .vscode-test/
 *.vsix
+
+# General files
+.DS_Store

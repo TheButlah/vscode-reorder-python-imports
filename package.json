@@ -12,6 +12,9 @@
     "engines": {
         "vscode": "^1.44.0"
     },
+    "repository": {
+        "url": "https://github.com/TheButlah/https://github.com/TheButlah/vscode-reorder-python-imports"
+    },
     "categories": [
         "Formatters",
         "Other"

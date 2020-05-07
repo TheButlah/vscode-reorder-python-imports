@@ -10,6 +10,8 @@ To learn more, [visit the original tool's homepage](https://github.com/asottile/
 
 Refactoring the imports is provided as a code action, which can be invoked by right clicking on the code or the lightbulb icon and selecting `Reorder Imports`, or selecting `Python Refactor: Reorder Imports` from the command palette.
 
+![Example usage from context menu](res/context-menu-example.gif)
+
 ## Requirements
 
 `reorder-python-imports` must be installed in the venv used by visual studio.
@@ -22,4 +24,4 @@ Refactoring the imports is provided as a code action, which can be invoked by ri
 
 ### 0.0.1
 
-Initial version with minimal required features - provided context menu and command, through which the code action can be run.
+Initial version with minimal required features - provided context menu and command through which the code action can be run.
