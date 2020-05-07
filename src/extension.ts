@@ -20,7 +20,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(reorder_command);
 
     let reorder_code_action = vscode.languages.registerCodeActionsProvider(
-        { scheme: 'file', language: 'python' },
+        { language: 'python' },
         reorder_provider,
         {
             providedCodeActionKinds: [
