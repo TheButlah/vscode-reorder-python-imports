@@ -3,9 +3,12 @@
     "displayName": "reorder-python-imports",
     "description": "Provides support for the reorder-python-imports tool for python",
     "version": "0.0.1",
+    "publisher": "thebutlah",
     "author": {
-        "name": "Ryan Butler"
+        "name": "Ryan Butler",
+        "email": "thebutlah@gmail.com"
     },
+    "license": "MIT",
     "engines": {
         "vscode": "^1.44.0"
     },
