@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-
 import * as vscode from 'vscode';
 import { changesSubstring } from '../../reorderImportsProvider';
 
@@ -14,20 +13,20 @@ suite(suiteDesc, () => {
         assert.strictEqual(changesSubstring('abcdef', ''), 'full-change');
 
         assert.deepStrictEqual(changesSubstring('abcdef', 'abcxyz'), [
-            [3, 6],
-            [3, 6],
+            [3, 3],
+            [3, 3],
         ]);
         assert.deepStrictEqual(changesSubstring('abcdef', 'abXYXYef'), [
+            [2, 2],
             [2, 4],
-            [2, 6],
         ]);
         assert.deepStrictEqual(changesSubstring('abcdef', 'abef'), [
-            [2, 4],
             [2, 2],
+            [2, 0],
         ]);
         assert.deepStrictEqual(changesSubstring('abef', 'abcdef'), [
+            [2, 0],
             [2, 2],
-            [2, 4],
         ]);
     });
 });

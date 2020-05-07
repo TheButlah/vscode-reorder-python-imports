@@ -89,28 +89,36 @@ export class ReorderImportsProvider implements CodeActionProvider {
                     reorderProcess.stdin?.end();
                 }
             );
+            console.log('STDOUT:', stdout);
             console.log('STDERR:', stderr);
 
-            const changeIndexRange = changesSubstring(input, stdout);
-            if (changeIndexRange === 'no-change') {
+            const changeOffsetRanges = changesSubstring(input, stdout);
+
+            if (changeOffsetRanges === 'no-change') {
+                console.log('No change');
                 return;
-            } else if (changeIndexRange === 'full-change') {
+            } else if (changeOffsetRanges === 'full-change') {
                 // callback used instead of the edit in the func args, due to edits
                 // being invalidated in callbacks/async fns.
+                console.log('Full change');
                 editor.edit((edit) => {
                     edit.replace(new Range(startPos, endPos), stdout);
                 });
             } else {
-                const changeRange = new Range(
-                    doc.positionAt(changeIndexRange[0][0]),
-                    doc.positionAt(changeIndexRange[0][1])
+                let originalChangeRange = new Range(
+                    doc.positionAt(changeOffsetRanges[0][0]),
+                    doc.positionAt(
+                        changeOffsetRanges[0][0] + changeOffsetRanges[0][1]
+                    )
                 );
                 const changeStr = stdout.substr(
-                    changeIndexRange[1][0],
-                    changeIndexRange[1][1]
+                    changeOffsetRanges[1][0],
+                    changeOffsetRanges[1][1]
                 );
+                console.log('Change from range:', originalChangeRange);
+                console.log('Change string:', changeStr);
                 editor.edit((edit) => {
-                    edit.replace(changeRange, changeStr);
+                    edit.replace(originalChangeRange, changeStr);
                 });
             }
         } catch (_error) {
@@ -128,10 +136,9 @@ export class ReorderImportsProvider implements CodeActionProvider {
 /**
  * Compares two strings and determines what the range of differences are.
  *
- * If the return type is [number, number], this represents the largest substring where
- * there is a difference.
+ * Returns [[originalStartIndex, originalLength], [otherStartIndex, otherLength]]
  *
- * Example: "abcdefgh" and "abcxyzh" would return `[[3, 7], [3, 6]]`
+ * Example: "abcdefgh" and "abcxyzh" would return `[[3, 4], [3, 3]]`
  */
 export function changesSubstring(
     original: string,
@@ -143,25 +150,29 @@ export function changesSubstring(
 
     let minLength = Math.min(original.length, other.length);
 
-    let start = 0; // Offset from the start for the start of the change
-    while (start < minLength && original[start] === other[start]) {
-        ++start;
+    let numFromStart; // Offset of the first change from the start of the strings
+    for (numFromStart = 0; numFromStart < minLength; ++numFromStart) {
+        if (original[numFromStart] !== other[numFromStart]) {
+            break;
+        }
     }
 
-    let end = 0; //Offset from the end for the end of the change
-    while (
-        end < minLength &&
-        original[original.length - end - 1] === other[other.length - end - 1]
-    ) {
-        ++end;
+    let numFromEnd; // Offset of the last change from the end of the strings
+    for (numFromEnd = 0; numFromEnd < minLength; ++numFromEnd) {
+        if (
+            original[original.length - numFromEnd - 1] !==
+            other[other.length - numFromEnd - 1]
+        ) {
+            break;
+        }
     }
 
-    if (deepStrictEqual([start, end], [0, 0])) {
+    if (deepStrictEqual([numFromStart, numFromEnd], [0, 0])) {
         return 'full-change';
     }
 
     return [
-        [start, original.length - end],
-        [start, other.length - end],
+        [numFromStart, original.length - numFromEnd - numFromStart],
+        [numFromStart, other.length - numFromEnd - numFromStart],
     ];
 }
