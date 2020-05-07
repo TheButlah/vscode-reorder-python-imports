@@ -20,20 +20,30 @@ const deepStrictEqual = (actual: any, expected: any) =>
     deepEqual(actual, expected, { strict: true });
 
 export class ReorderImportsProvider implements CodeActionProvider {
+    public static readonly PROVIDED_KINDS = [
+        // This will also get triggered from `CodeActionKind.SourceOrganizeImports`, as
+        // it "extends" from that kind.
+        CodeActionKind.SourceOrganizeImports.append('reorder-python-imports'),
+    ];
+
     provideCodeActions(
         document: TextDocument,
         range: Range | Selection,
         context: CodeActionContext,
         token: CancellationToken
     ): ProviderResult<CodeAction[]> {
+        console.log('Context:', context);
+        const actionTitle = 'Reorder Imports';
+
         let action = new CodeAction(
-            'Reorder Imports',
-            CodeActionKind.SourceOrganizeImports
+            actionTitle,
+            ReorderImportsProvider.PROVIDED_KINDS[0]
         );
         action.command = {
             command: 'reorder-python-imports.reorderImports',
             title: '',
         };
+
         return [action];
     }
 

@@ -23,9 +23,7 @@ export async function activate(context: vscode.ExtensionContext) {
         { language: 'python' },
         reorder_provider,
         {
-            providedCodeActionKinds: [
-                vscode.CodeActionKind.SourceOrganizeImports,
-            ],
+            providedCodeActionKinds: ReorderImportsProvider.PROVIDED_KINDS,
         }
     );
     context.subscriptions.push(reorder_code_action);
