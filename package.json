@@ -2,7 +2,7 @@
     "name": "reorder-python-imports",
     "displayName": "reorder-python-imports",
     "description": "Provides support for the reorder-python-imports tool for python",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "thebutlah",
     "author": {
         "name": "Ryan Butler",
