@@ -18,6 +18,22 @@ selecting `Python Refactor: Reorder Imports` from the command palette.
 
 ![Example usage from context menu](res/context-menu-example.gif)
 
+## Settings
+
+Below is an example of a [settings.json](https://code.visualstudio.com/Docs/customization/userandworkspace) file with settings relevant to
+vscode-reorder-python-imports.
+
+```json
+{
+    "reorder-python-imports.args": [
+        "--application-directories=.:src",
+        "--add-import 'from __future__ import absolute_import'",
+        "--add-import 'from __future__ import division'",
+        "--add-import 'from __future__ import print_function'"
+  ]
+}
+```
+
 ### Reordering on Save
 
 Reordering imports on save is also supported, but requires you to set the following in

@@ -71,8 +71,21 @@ export class ReorderImportsProvider implements CodeActionProvider {
             path.dirname(pythonPath),
             'reorder-python-imports'
         );
-        console.log('Reorder Path:', reorderPath);
 
+        const extSpecifiedArgs = ["--exit-zero-even-if-changed"];
+        const userSpecifiedArgs = workspace.getConfiguration("reorder-python-imports").get<string[]>("args");
+
+        let reorderArgs = userSpecifiedArgs || [];
+        
+        // Don't add arg if user has already specified it in conf
+        extSpecifiedArgs.map((arg) => {
+            if (!reorderArgs.includes(arg)) {
+                reorderArgs.push(arg);
+            }
+        });
+
+        console.log('Reorder Path:', reorderPath);
+        
         const input = doc.getText();
 
         const lastLine = doc.lineCount - 1;
@@ -84,7 +97,7 @@ export class ReorderImportsProvider implements CodeActionProvider {
             const [stdout, stderr] = await new Promise<[string, string]>(
                 (resolve, reject) => {
                     const reorderProcess: ChildProcess = exec(
-                        `${reorderPath} --exit-zero-even-if-changed -`,
+                        `${reorderPath} ${reorderArgs.join(" ")} -`,
                         { cwd: wksp.uri.fsPath },
                         (error, stdout, stderr) => {
                             if (error) {

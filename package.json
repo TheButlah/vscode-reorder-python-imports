@@ -42,6 +42,17 @@
                     "when": "editorLangId == python"
                 }
             ]
+        },
+        "configuration": {
+            "title": "reorder-python-imports",
+            "properties": {
+                "reorder-python-imports.args": {
+                    "type": "array",
+                    "default": [],
+                    "scope": "resource",
+                    "description": "Command-line arguments passed to reorder-python-imports."
+                }
+            }
         }
     },
     "scripts": {
