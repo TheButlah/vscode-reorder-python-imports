@@ -3,15 +3,5 @@
         {
             "path": "test-folder"
         }
-    ],
-    "settings": {
-        "workbench.colorCustomizations": {
-            "titleBar.activeBackground": "#32099d",
-            "titleBar.activeForeground": "#e7e7e7",
-            "titleBar.inactiveBackground": "#32099d99",
-            "titleBar.inactiveForeground": "#e7e7e799"
-        },
-        "peacock.color": "#32099d",
-        "python.defaultInterpreterPath": "\"c:\\Users\\an6802jo\\Work Folders\\program\\src\\vscode-reorder-python-imports\\test-fixtures\\test-folder\\venv\\Scripts\\python\""
-    }
+    ]
 }
