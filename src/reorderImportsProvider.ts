@@ -14,10 +14,29 @@ import {
     TextDocument,
     TextEditor,
     workspace,
+    extensions,
 } from 'vscode';
 
 const deepStrictEqual = (actual: any, expected: any) =>
     deepEqual(actual, expected, { strict: true });
+
+const getPythonPath = (): string => {
+    const ext = extensions.getExtension('ms-python.python');
+
+    if (!ext) {
+        throw new Error("Can't find ms-python.python extension.");
+    }
+
+    const extApi = ext.exports;
+
+    const execCommand = extApi.settings.getExecutionDetails().execCommand[0];
+
+    if (typeof execCommand !== 'string') {
+        throw new Error('Unexpected return value from ms-python.python');
+    }
+
+    return execCommand;
+};
 
 export class ReorderImportsProvider implements CodeActionProvider {
     public static readonly PROVIDED_KINDS = [
@@ -51,41 +70,30 @@ export class ReorderImportsProvider implements CodeActionProvider {
         let doc = editor.document;
         console.log('Reordering ' + doc.uri);
 
-        let _wksp = workspace.getWorkspaceFolder(doc.uri);
-        if (!_wksp) {
-            throw new Error(
-                'Could not get a workspace for the active document!'
-            );
-        }
-        let wksp = _wksp;
-
-        let _pythonPath = workspace
-            .getConfiguration('python', doc.uri)
-            .get<string>('pythonPath');
-        if (!_pythonPath) {
-            throw new Error('Could not get `python.pythonPath` configuration!');
-        }
-        let pythonPath = _pythonPath;
+        const pythonPath = getPythonPath();
 
         let reorderPath = path.join(
             path.dirname(pythonPath),
             'reorder-python-imports'
         );
 
-        const extSpecifiedArgs = ["--exit-zero-even-if-changed"];
-        const userSpecifiedArgs = workspace.getConfiguration("reorder-python-imports").get<string[]>("args");
+        console.debug('Reorder Path:', reorderPath);
 
-        let reorderArgs = userSpecifiedArgs || [];
-        
-        // Don't add arg if user has already specified it in conf
-        extSpecifiedArgs.map((arg) => {
-            if (!reorderArgs.includes(arg)) {
-                reorderArgs.push(arg);
-            }
-        });
+        const extSpecifiedArgs = ['--exit-zero-even-if-changed'];
+        const userSpecifiedArgs = workspace
+            .getConfiguration('reorder-python-imports', doc.uri)
+            .get<string[]>('args');
 
-        console.log('Reorder Path:', reorderPath);
-        
+        let _reorderArgs = extSpecifiedArgs.concat(userSpecifiedArgs || []);
+
+        // Remove duplicate args
+        const reorderArgs = [...new Set(_reorderArgs)];
+
+        console.debug('Reorder args:', reorderArgs);
+
+        const reorderCmd = `"${reorderPath}" ${reorderArgs.join(' ')} -`;
+        console.debug('Reorder cmd:', reorderCmd);
+
         const input = doc.getText();
 
         const lastLine = doc.lineCount - 1;
@@ -97,8 +105,7 @@ export class ReorderImportsProvider implements CodeActionProvider {
             const [stdout, stderr] = await new Promise<[string, string]>(
                 (resolve, reject) => {
                     const reorderProcess: ChildProcess = exec(
-                        `${reorderPath} ${reorderArgs.join(" ")} -`,
-                        { cwd: wksp.uri.fsPath },
+                        reorderCmd,
                         (error, stdout, stderr) => {
                             if (error) {
                                 reject(error);
