@@ -50,6 +50,6 @@ jobs:
               run: xvfb-run -a npm test
               if: runner.os == 'Linux'
 
-            - name: run tests on windows/max
+            - name: run tests on windows/mac
               run: npm test
               if: runner.os != 'Linux'
