@@ -19,7 +19,7 @@
         "Other"
     ],
     "engines": {
-        "vscode": "1",
+        "vscode": "^1.63.0",
         "node": "16"
     },
     "activationEvents": [

@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Path to python executable is now discovered using the settings key
     `python.defaultInterpreterPath` instead of deprecated key
     `python.pythonPath`.
+-   VS Code version requirement bumped to `^1.63.0` to allow publishing
+    pre-release versions along side stable on extension marketplace.
 
 ## v0.1.0 - 7 May 2020
 
