@@ -76,10 +76,10 @@ published to the VS Code Extension Marketplace using GitHub Actions.
 
 ### Releasing a pre-release
 
-This needs to be done outside CI/CD. The following command bumps the patch part
+This needs to be done outside CI/CD. The following command bumps the minor part
 of the version (in `package.json` and with a git tag) and publishes the
 extension as a [pre-release](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#prerelease-extensions).
 
 ```bash
-npx vsce publish --pre-release
+npx vsce publish minor --pre-release
 ```
