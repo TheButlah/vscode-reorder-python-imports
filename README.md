@@ -67,3 +67,19 @@ Added support and documentation for reordering on save. First feature-complete r
 ### v0.0.1
 
 Initial version with minimal required features - provided context menu and command through which the code action can be run.
+
+## Releasing a new version
+
+Use `npm version` with either `major`, `minor` or `patch` to both bump the
+version in `package.json` and create a git version tag. The extension is
+published to the VS Code Extension Marketplace using GitHub Actions.
+
+### Releasing a pre-release
+
+This needs to be done outside CI/CD. The following command bumps the patch part
+of the version (in `package.json` and with a git tag) and publishes the
+extension as a [pre-release](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#prerelease-extensions).
+
+```bash
+npx vsce publish --pre-release
+```
