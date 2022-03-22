@@ -1,4 +1,4 @@
-import { ChildProcess, exec, ExecException } from 'child_process';
+import { ChildProcess, exec } from 'child_process';
 import deepEqual from 'deep-equal';
 import * as path from 'path';
 import {
@@ -151,11 +151,7 @@ export class ReorderImportsProvider implements CodeActionProvider {
                     edit.replace(originalChangeRange, changeStr);
                 });
             }
-        } catch (_error) {
-            if (!(_error as ExecException)) {
-                throw _error;
-            }
-            let error: ExecException = _error;
+        } catch (error) {
 
             // TODO: Intelligently detect error types
             throw error;
