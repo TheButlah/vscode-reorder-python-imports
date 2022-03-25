@@ -1,10 +1,11 @@
-import { spawn } from 'child_process';
+import { spawnSync } from 'child_process';
 import path from 'path';
 import * as fse from 'fs-extra';
 import { tmpdir } from 'os';
 
 import {
     downloadAndUnzipVSCode,
+    resolveCliArgsFromVSCodeExecutablePath,
     resolveCliPathFromVSCodeExecutablePath,
     runTests,
 } from '@vscode/test-electron';
@@ -35,18 +36,15 @@ async function main() {
         // Passed to --extensionTestsPath
         const extensionTestsPath = path.resolve(__dirname, './suite/index');
 
-        // Install
-        const [vscodeExecutablePath, userDataDirectory] = await Promise.all([
-            downloadAndUnzipVSCode('stable').then((vsPath) => {
-                spawn(
-                    resolveCliPathFromVSCodeExecutablePath(vsPath),
-                    ['--install-extension', 'ms-python.python'],
-                    { stdio: 'inherit' }
-                );
-                return vsPath;
-            }),
-            createSetting(),
-        ]);
+        // download VS Code
+        const vscodeExecutablePath = await downloadAndUnzipVSCode('stable');
+
+        const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
+
+        const userDataDirectory = await createSetting();
+
+        // install ms-python
+        spawnSync(cli, [...args, '--install-extension', 'ms-python.python'], {encoding: 'utf-8', stdio: 'inherit'});
 
         const workspacePath = path.resolve(
             'test-fixtures',
