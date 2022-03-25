@@ -2,8 +2,7 @@ name: Run tests and publish on new tag
 
 on:
     - push
-    - pull_request
-
+    
 jobs:
     test:
         runs-on: ${{ matrix.os }}
