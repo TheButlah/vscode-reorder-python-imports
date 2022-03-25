@@ -58,16 +58,6 @@ your settings to prevent Microsoft's python extension from running `isort`:
 imports. When vscode is configured to organize imports on save, both `isort` and
 `reorder-python-imports` are run. To work around this, see the [reordering on save](#reordering-on-save) section.
 
-## Release Notes
-
-### v0.1.0
-
-Added support and documentation for reordering on save. First feature-complete release.
-
-### v0.0.1
-
-Initial version with minimal required features - provided context menu and command through which the code action can be run.
-
 ## Releasing a new version
 
 Use `npm version` with either `major`, `minor` or `patch` to both bump the
