@@ -3,7 +3,12 @@ import { readFile } from 'fs-extra';
 import path from 'path';
 import * as vscode from 'vscode';
 import execPromise from '../../execPromise';
-import { getWorkspaceFolderUri, getVenvActivateCmd } from './testUtils';
+import getPythonPath from '../../getPythonPath';
+import {
+    getWorkspaceFolderUri,
+    getVenvActivateCmd,
+    getVenvExecutable,
+} from './testUtils';
 
 const pyFiles = [
     'comment-in-imports.py',
@@ -17,9 +22,9 @@ const pyFiles = [
 ];
 
 const args = [
-    '"--add-import from __future__ import absolute_import"',
-    '"--add-import from __future__ import division"',
-    '"--add-import from __future__ import print_function"',
+    "--add-import 'from __future__ import absolute_import'",
+    "--add-import 'from __future__ import division'",
+    "--add-import 'from __future__ import print_function'",
 ];
 
 const suiteDesc = 'Reorder Imports Provider - same as cli';
@@ -78,12 +83,12 @@ const reorderWithCli = async (
     input: string,
     args: string[]
 ): Promise<string> => {
-    const venvActivateCmd = getVenvActivateCmd(
-        `${getWorkspaceFolderUri('test-folder').fsPath}/venv`
-    );
-    const reorderCmd = `reorder-python-imports ${args.join(' ')} -`;
+    args.unshift('--exit-zero-even-if-changed');
+    args.push('-');
+
+    const venvPythonPath = getPythonPath();
     let { stdout: withCli } = await execPromise(
-        `"${venvActivateCmd}" && ${reorderCmd}`,
+        `${venvPythonPath} -m reorder_python_imports ${args.join(' ')}`,
         input
     );
 

@@ -16,7 +16,7 @@ suite(suiteDesc, () => {
     });
 
     test('test stdin', async () => {
-        const cmd = process.platform === 'win32' ? 'findstr x*' : 'echo';
+        const cmd = process.platform === 'win32' ? 'findstr x*' : 'echo $(</dev/stdin)';
         const { stdout, stderr } = await execPromise(cmd, 'string');
         assert(stdout.trim() === 'string');
         assert(stderr.trim() === '');

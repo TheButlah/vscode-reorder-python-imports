@@ -1,6 +1,8 @@
 import { readFile } from 'fs-extra'; // promisified
 import path from 'path';
+import { execPath } from 'process';
 import vscode from 'vscode';
+import execPromise from '../../execPromise';
 
 export const getVenvExecutable = (venvDir: string, executable: string) => {
     const execDir = process.platform === 'win32' ? 'Scripts' : 'bin';
@@ -11,6 +13,12 @@ export const getVenvActivateCmd = (venvDir: string) => {
     let execPath = getVenvExecutable(venvDir, 'activate');
 
     return process.platform === 'win32' ? execPath : 'source ' + execPath;
+};
+
+export const createVenv = async (pythonPath: string, venvDir: string) => {
+    await execPromise(`${pythonPath} -m virtualenv ${venvDir}`);
+
+    return getVenvExecutable(venvDir, 'python');
 };
 
 /**`

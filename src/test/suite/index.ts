@@ -3,11 +3,11 @@ import Mocha from 'mocha';
 import glob from 'glob';
 import {
     getWorkspaceFolderUri,
-    getVenvActivateCmd,
-    getVenvExecutable,
+    createVenv,
 } from './testUtils';
 import * as vscode from 'vscode';
 import execPromise from '../../execPromise';
+import getPythonPath from '../../getPythonPath';
 
 export function run(): Promise<void> {
     // Create the mocha test
@@ -24,21 +24,15 @@ export function run(): Promise<void> {
             getWorkspaceFolderUri('test-folder').fsPath,
             'venv'
         );
-        const setupVenvCmd = `python3 -m virtualenv "${venvDir}"`;
 
-        const activateVenvCmd = `"${getVenvActivateCmd(venvDir)}"`;
-
-        const installCmd = 'pip install reorder-python-imports';
+        const venvPythonPath = await createVenv(getPythonPath(), venvDir);
 
         await execPromise(
-            [setupVenvCmd, activateVenvCmd, installCmd].join(' && ')
+            `${venvPythonPath} -m pip install reorder-python-imports`
         );
 
         const settings = vscode.workspace.getConfiguration('python');
-        settings.update(
-            'defaultInterpreterPath',
-            getVenvExecutable(venvDir, 'python')
-        );
+        settings.update('defaultInterpreterPath', venvPythonPath);
     });
 
     return new Promise((c, e) => {
