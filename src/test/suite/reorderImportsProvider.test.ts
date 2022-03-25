@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { changesSubstring } from '../../reorderImportsProvider';
 
-let suiteDesc = 'Reorder Imports Provider';
+const suiteDesc = 'Reorder Imports Provider - changeSubstring';
 suite(suiteDesc, () => {
     vscode.window.showInformationMessage('Testing ' + suiteDesc);
 

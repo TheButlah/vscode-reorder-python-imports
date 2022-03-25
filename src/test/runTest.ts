@@ -1,6 +1,30 @@
-import * as path from 'path';
+import { spawnSync } from 'child_process';
+import path from 'path';
+import * as fse from 'fs-extra';
+import { tmpdir } from 'os';
 
-import { runTests } from '@vscode/test-electron';
+import {
+    downloadAndUnzipVSCode,
+    resolveCliArgsFromVSCodeExecutablePath,
+    resolveCliPathFromVSCodeExecutablePath,
+    runTests,
+} from '@vscode/test-electron';
+
+const createSetting = async () => {
+    const userDataDirectory = await fse.mkdtemp(
+        path.join(tmpdir(), 'vscode-reorder-python-imports-settings-')
+    );
+    const settingsFile = path.join(userDataDirectory, 'User', 'settings.json');
+    const defaultSettings: Record<string, string | boolean | string[]> = {
+        'security.workspace.trust.enabled': false, // Disable trusted workspaces.
+    };
+    fse.ensureDirSync(path.dirname(settingsFile));
+    fse.writeFileSync(
+        settingsFile,
+        JSON.stringify(defaultSettings, undefined, 4)
+    );
+    return userDataDirectory;
+};
 
 async function main() {
     try {
@@ -12,8 +36,33 @@ async function main() {
         // Passed to --extensionTestsPath
         const extensionTestsPath = path.resolve(__dirname, './suite/index');
 
-        // Download VS Code, unzip it and run the integration test
-        await runTests({ extensionDevelopmentPath, extensionTestsPath });
+        // download VS Code
+        const vscodeExecutablePath = await downloadAndUnzipVSCode('stable');
+
+        const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
+
+        const userDataDirectory = await createSetting();
+
+        // install ms-python
+        spawnSync(cli, [...args, '--install-extension', 'ms-python.python'], {encoding: 'utf-8', stdio: 'inherit'});
+
+        const workspacePath = path.resolve(
+            'test-fixtures',
+            'test.code-workspace'
+        );
+
+        await runTests({
+            vscodeExecutablePath,
+            extensionDevelopmentPath,
+            extensionTestsPath,
+            launchArgs: [
+                workspacePath,
+                '--skip-welcome',
+                '--skip-release-notes',
+                '--user-data-dir',
+                userDataDirectory,
+            ],
+        });
     } catch (err) {
         console.error('Failed to run tests');
         process.exit(1);

@@ -1,4 +1,3 @@
-import { ChildProcess, exec } from 'child_process';
 import deepEqual from 'deep-equal';
 import * as path from 'path';
 import {
@@ -14,29 +13,12 @@ import {
     TextDocument,
     TextEditor,
     workspace,
-    extensions,
 } from 'vscode';
+import execPromise from './execPromise';
+import getPythonPath from './getPythonPath';
 
 const deepStrictEqual = (actual: any, expected: any) =>
     deepEqual(actual, expected, { strict: true });
-
-const getPythonPath = (): string => {
-    const ext = extensions.getExtension('ms-python.python');
-
-    if (!ext) {
-        throw new Error("Can't find ms-python.python extension.");
-    }
-
-    const extApi = ext.exports;
-
-    const execCommand = extApi.settings.getExecutionDetails().execCommand[0];
-
-    if (typeof execCommand !== 'string') {
-        throw new Error('Unexpected return value from ms-python.python');
-    }
-
-    return execCommand;
-};
 
 export class ReorderImportsProvider implements CodeActionProvider {
     public static readonly PROVIDED_KINDS = [
@@ -102,23 +84,8 @@ export class ReorderImportsProvider implements CodeActionProvider {
         const endPos = new Position(lastLine, lastChar);
 
         try {
-            const [stdout, stderr] = await new Promise<[string, string]>(
-                (resolve, reject) => {
-                    const reorderProcess: ChildProcess = exec(
-                        reorderCmd,
-                        (error, stdout, stderr) => {
-                            if (error) {
-                                reject(error);
-                                return;
-                            }
-                            resolve([stdout, stderr]);
-                        }
-                    );
-                    // send code to be formatted into stdin
-                    reorderProcess.stdin?.write(input);
-                    reorderProcess.stdin?.end();
-                }
-            );
+            const { stdout, stderr } = await execPromise(reorderCmd, input);
+
             console.log('STDOUT:', stdout);
             console.log('STDERR:', stderr);
 

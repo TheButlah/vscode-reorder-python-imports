@@ -1,6 +1,13 @@
 import * as path from 'path';
 import Mocha from 'mocha';
 import glob from 'glob';
+import {
+    getWorkspaceFolderUri,
+    createVenv,
+} from './testUtils';
+import * as vscode from 'vscode';
+import execPromise from '../../execPromise';
+import getPythonPath from '../../getPythonPath';
 
 export function run(): Promise<void> {
     // Create the mocha test
@@ -10,6 +17,23 @@ export function run(): Promise<void> {
     });
 
     const testsRoot = path.resolve(__dirname, '..');
+
+    mocha.globalSetup(async () => {
+        mocha.timeout(5000);
+        const venvDir = path.join(
+            getWorkspaceFolderUri('test-folder').fsPath,
+            'venv'
+        );
+
+        const venvPythonPath = await createVenv(getPythonPath(), venvDir);
+
+        await execPromise(
+            `${venvPythonPath} -m pip install reorder-python-imports`
+        );
+
+        const settings = vscode.workspace.getConfiguration('python');
+        settings.update('defaultInterpreterPath', venvPythonPath);
+    });
 
     return new Promise((c, e) => {
         glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
