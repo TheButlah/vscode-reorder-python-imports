@@ -72,7 +72,7 @@
         "@types/node": "^13.11.0",
         "@types/vscode": "^1.69.0",
         "@typescript-eslint/eslint-plugin": "^5.30.6",
-        "@typescript-eslint/parser": "^5.30.5",
+        "@typescript-eslint/parser": "^5.30.6",
         "@vscode/test-electron": "^2.1.5",
         "eslint": "^8.19.0",
         "glob": "^8.0.3",
