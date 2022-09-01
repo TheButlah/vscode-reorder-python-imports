@@ -9,7 +9,7 @@ updates:
       directory: '/'
       # Check the npm registry for updates every day (weekdays)
       schedule:
-          interval: 'daily'
+          interval: 'monthly'
       ignore:
           - dependency-name: '@types/node'
             update-types: ['version-update:semver-major']
