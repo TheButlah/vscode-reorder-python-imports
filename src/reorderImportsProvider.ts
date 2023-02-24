@@ -102,7 +102,7 @@ export class ReorderImportsProvider implements CodeActionProvider {
         const endPos = new Position(lastLine, lastChar);
 
         try {
-            const [stdout, stderr] = await new Promise<[string, string]>(
+            let [stdout, stderr] = await new Promise<[string, string]>(
                 (resolve, reject) => {
                     const reorderProcess: ChildProcess = exec(
                         reorderCmd,
@@ -119,6 +119,11 @@ export class ReorderImportsProvider implements CodeActionProvider {
                     reorderProcess.stdin?.end();
                 }
             );
+            // Replace all double carriage returns to one. Why? Because there's problem which occurs when
+            // EOL in VSCode is set to CRLF. Running child process with reorder-python-imports is replacing for some
+            // reason `\r\n` to`\r\r\n` and it's causing double new lines in VSCode editor.
+            stdout = stdout.replace(/\r\r/g, '\r');
+
             console.log('STDOUT:', stdout);
             console.log('STDERR:', stderr);
 
