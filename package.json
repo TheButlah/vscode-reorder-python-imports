@@ -88,6 +88,6 @@
         "workspace"
     ],
     "dependencies": {
-        "deep-equal": "^2.0.5"
+        "deep-equal": "^2.2.1"
     }
 }
