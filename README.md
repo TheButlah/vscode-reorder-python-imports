@@ -50,7 +50,8 @@ your settings to prevent Microsoft's python extension from running `isort`:
 
 ## Requirements
 
-`reorder-python-imports` must be installed in the venv used by visual studio.
+`reorder-python-imports` must be installed in the venv used by visual studio, or user must
+config the path for `reorder-python-imports` in settings.
 
 ## Known Issues
 
