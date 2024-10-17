@@ -1,5 +1,8 @@
 # reorder-python-imports
 
+**NOTE: This project has been unmaintained for years. I'm no longer accepting pull requests
+so I'm archiving the repo. Feel free to clone it and do with the code as you please!**
+
 VSCode extension to sort and refactor python imports using
 [`reorder-python-imports`](https://github.com/asottile/reorder_python_imports).
 
