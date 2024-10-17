@@ -2,7 +2,7 @@
     "name": "reorder-python-imports",
     "displayName": "reorder-python-imports",
     "description": "Provides support for the reorder-python-imports tool for python",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "publisher": "thebutlah",
     "author": {
         "name": "Ryan Butler",
@@ -19,8 +19,8 @@
         "Other"
     ],
     "engines": {
-        "vscode": "^1.63.0",
-        "node": "16"
+        "vscode": "^1.77.0",
+        "node": "18.0.0"
     },
     "activationEvents": [
         "onLanguage:python",
@@ -52,6 +52,11 @@
                     "default": [],
                     "scope": "resource",
                     "description": "Command-line arguments passed to reorder-python-imports."
+                },
+                "reorderPythonImports.path": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to the reorder-python-imports executable"
                 }
             }
         }

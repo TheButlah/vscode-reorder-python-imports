@@ -1,5 +1,6 @@
 import { ChildProcess, exec } from 'child_process';
 import deepEqual from 'deep-equal';
+import * as os from 'os';
 import * as path from 'path';
 import {
     CancellationToken,
@@ -70,13 +71,25 @@ export class ReorderImportsProvider implements CodeActionProvider {
         let doc = editor.document;
         console.log('Reordering ' + doc.uri);
 
-        const pythonPath = getPythonPath();
+        let reorderPath: string | null = null;
 
-        let reorderPath = path.join(
-            path.dirname(pythonPath),
-            'reorder-python-imports'
-        );
+        const config = workspace.getConfiguration('reorderPythonImports');
+        let configPath = config.get<string>('path');
 
+        if (configPath) {
+            if (configPath.startsWith('~')) {
+                configPath = path.join(os.homedir(), configPath.slice(1));
+            }
+            configPath = path.resolve(configPath);
+            reorderPath = configPath;
+        } else {
+            const pythonPath = getPythonPath();
+
+            reorderPath = path.join(
+                path.dirname(pythonPath),
+                'reorder-python-imports'
+            );
+        }
         console.debug('Reorder Path:', reorderPath);
 
         const extSpecifiedArgs = ['--exit-zero-even-if-changed'];
